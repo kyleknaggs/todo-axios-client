@@ -18,6 +18,7 @@ class App extends Component {
     this.addTodo = this.addTodo.bind(this);
     this.deleteTodo = this.deleteTodo.bind(this);
     this.saveTodo = this.saveTodo.bind(this);
+    this.handleSuccess = this.handleSuccess.bind(this);
   }
 
   // Update the application state with the most recent list of todos.
@@ -40,11 +41,6 @@ class App extends Component {
 
   }
 
-  handleError(error){
-    alert('Oh no! There was an error with your request!');
-    console.log(error);
-  }
-
   // Get the list of todos from the server.
   fetchTodos(isFirstLoad){
     // Make updateTodos() accessible inside of .then()
@@ -59,6 +55,15 @@ class App extends Component {
 
   }
 
+  handleSuccess() {
+    this.fetchTodos();
+  }
+
+  handleError(error) {
+    alert('Oh no! There was an error with your request!');
+    console.log(error);
+  }
+
   addTodo(){
     // Make fetchTodos() available inside of .then()
     const app = this;
@@ -67,9 +72,7 @@ class App extends Component {
     };
 
     axios.post('http://localhost:3000/todos/', data)
-      .then(function(){
-        app.fetchTodos();
-      })
+      .then(app.handleSuccess)
       .catch(app.handleError);
   }
 
@@ -78,13 +81,11 @@ class App extends Component {
     const app = this;
 
     axios.delete(`http://localhost:3000/todos/${id}`)
-      .then(function(){
-        app.fetchTodos();
-      })
+      .then(app.handleSuccess)
       .catch(app.handleError);
   }
 
-  saveTodo(id, inputText){
+  saveTodo(id, inputText) {
     // Make fetchTodos() available inside of .onload()
     const app = this;
     const xhr = new XMLHttpRequest();
