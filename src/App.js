@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 import Background from './components/Background';
 import TodoList from './components/TodoList';
 
@@ -21,19 +22,19 @@ class App extends Component {
 
   // Get the list of todos from the server.
   fetchTodos(isFirstLoad){
-    // Make loadTodos accessible inside of onload
+    // Make loadTodos() accessible inside of .then()
     const app = this;
-    var xhr = new XMLHttpRequest();
 
-    xhr.onload = function () {
-      if (this.status === 200) {
-        const todos = JSON.parse(xhr.responseText);
+    axios.get('http://localhost:3000/todos/')
+      .then(function(response){
+        var todos = response.data;
         app.loadTodos(todos, isFirstLoad);
-      }
-    }
+      })
+      .catch(function(error){
+        alert('Oh no! There was an error with your request!');
+        console.log(error);
+      });
 
-    xhr.open("GET", 'http://localhost:3000/todos/');
-    xhr.send();
   }
 
   // Update the application state with the most recent list of todos.
