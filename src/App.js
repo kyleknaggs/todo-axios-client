@@ -60,21 +60,18 @@ class App extends Component {
   addTodo(){
     // Make fetchTodos() available inside of .onload()
     const app = this;
-    const xhr = new XMLHttpRequest();
-    const data = JSON.stringify({
+    const data = {
       text: "New todo"
-    });
+    };
 
-    xhr.onload = function () {
-      // Once todo has been added get new list of todos
-      if (this.status === 201) {
+    axios.post('http://localhost:3000/todos/', data)
+      .then(function(){
         app.fetchTodos();
-      }
-    }
-
-    xhr.open("POST", 'http://localhost:3000/todos/');
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send(data);
+      })
+      .catch(function (error) {
+        alert('Oh no! There was an error with your request!');
+        console.log(error);
+      });
   }
 
   deleteTodo(id){
