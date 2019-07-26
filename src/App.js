@@ -20,6 +20,26 @@ class App extends Component {
     this.saveTodo = this.saveTodo.bind(this);
   }
 
+  // Update the application state with the most recent list of todos.
+  updateTodos(todos, isFirstLoad) {
+    // Make setState accessible inside of setTimeout:
+    const app = this;
+
+    function updateState() {
+      app.setState({
+        todos: todos
+      });
+    }
+
+    // Prevent loading screen from disappearing too fast.
+    if (isFirstLoad) {
+      setTimeout(updateState, 1500);
+    } else {
+      updateState();
+    }
+
+  }
+
   handleError(error){
     alert('Oh no! There was an error with your request!');
     console.log(error);
@@ -27,35 +47,15 @@ class App extends Component {
 
   // Get the list of todos from the server.
   fetchTodos(isFirstLoad){
-    // Make loadTodos() accessible inside of .then()
+    // Make updateTodos() accessible inside of .then()
     const app = this;
 
     axios.get('http://localhost:3000/todos/')
       .then(function(response){
         var todos = response.data;
-        app.loadTodos(todos, isFirstLoad);
+        app.updateTodos(todos, isFirstLoad);
       })
       .catch(app.handleError);
-
-  }
-
-  // Update the application state with the most recent list of todos.
-  loadTodos(todos, isFirstLoad) {
-    // Make setState accessible inside of setTimeout:
-    const app = this;
-
-    function updateState(){
-      app.setState({
-        todos: todos
-      });
-    }
-
-    // Prevent loading screen from disappearing too fast.
-    if(isFirstLoad){
-      setTimeout(updateState, 1500);
-    }else{
-      updateState();
-    }
 
   }
 
