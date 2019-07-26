@@ -60,7 +60,7 @@ class App extends Component {
   }
 
   addTodo(){
-    // Make fetchTodos() available inside of .onload()
+    // Make fetchTodos() available inside of .then()
     const app = this;
     const data = {
       text: "New todo"
@@ -74,19 +74,14 @@ class App extends Component {
   }
 
   deleteTodo(id){
-    // Make fetchTodos() available inside of .onload()
+    // Make fetchTodos() available inside of .then()
     const app = this;
-    const xhr = new XMLHttpRequest();
 
-    xhr.onload = function () {
-      // If todo was deleted successfully, fetch the remaining todos
-      if (this.status === 200) {
+    axios.delete(`http://localhost:3000/todos/${id}`)
+      .then(function(){
         app.fetchTodos();
-      }
-    }
-
-    xhr.open("DELETE", `http://localhost:3000/todos/${id}`);
-    xhr.send()
+      })
+      .catch(app.handleError);
   }
 
   saveTodo(id, inputText){
