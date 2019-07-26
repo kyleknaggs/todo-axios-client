@@ -20,6 +20,11 @@ class App extends Component {
     this.saveTodo = this.saveTodo.bind(this);
   }
 
+  handleError(error){
+    alert('Oh no! There was an error with your request!');
+    console.log(error);
+  }
+
   // Get the list of todos from the server.
   fetchTodos(isFirstLoad){
     // Make loadTodos() accessible inside of .then()
@@ -30,10 +35,7 @@ class App extends Component {
         var todos = response.data;
         app.loadTodos(todos, isFirstLoad);
       })
-      .catch(function(error){
-        alert('Oh no! There was an error with your request!');
-        console.log(error);
-      });
+      .catch(app.handleError);
 
   }
 
@@ -68,10 +70,7 @@ class App extends Component {
       .then(function(){
         app.fetchTodos();
       })
-      .catch(function (error) {
-        alert('Oh no! There was an error with your request!');
-        console.log(error);
-      });
+      .catch(app.handleError);
   }
 
   deleteTodo(id){
