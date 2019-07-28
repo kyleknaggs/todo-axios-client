@@ -88,21 +88,13 @@ class App extends Component {
   saveTodo(id, inputText) {
     // Make fetchTodos() available inside of .onload()
     const app = this;
-    const xhr = new XMLHttpRequest();
-    const data = JSON.stringify({
+    const data = {
       text: inputText
-    });
+    };
 
-    xhr.onload = function () {
-      // Once todo has been added get new list of todos
-      if (this.status === 200) {
-        app.fetchTodos();
-      }
-    }
-
-    xhr.open("PUT", `http://localhost:3000/todos/${id}`);
-    xhr.setRequestHeader("Content-type", "application/json");
-    xhr.send(data);
+    axios.put(`http://localhost:3000/todos/${id}`, data)
+      .then(app.handleSuccess)
+      .catch(app.handleError);
   }
 
   // Lifecycle methods:
